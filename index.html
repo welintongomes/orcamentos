@@ -1,0 +1,2103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Orçamentos Universal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 12px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 13px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: transparent;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .tab.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        .item-list {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 8px;
+            margin-bottom: 20px;
+        }
+
+        .item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .item-details {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .total-section {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .total-section h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .total-value {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+
+        .dropdown-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .dropdown-suggestions.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .dropdown-item-details {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .autocomplete-container {
+            position: relative;
+        }
+
+        /* Estilos dos Modais */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 1% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+            position: relative;
+        }
+
+        .modal-large {
+            max-width: 800px;
+        }
+
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .form-actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #1e7e34;
+        }
+
+        /* Detalhes do orçamento */
+        .orcamento-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #007bff;
+        }
+
+        .orcamento-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .orcamento-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .itens-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .itens-table th,
+        .itens-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .itens-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .itens-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .totais-container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .total-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .total-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 18px;
+            color: #007bff;
+        }
+
+        .total-label {
+            font-weight: bold;
+        }
+
+        .total-value {
+            font-weight: bold;
+        }
+
+        /* CSS para edição de itens */
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .form-section h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+
+        .form-section h4 {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 120px;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .add-item-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+        }
+
+        .items-list-section {
+            margin-bottom: 20px;
+        }
+
+        .item-edicao {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .item-edicao:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .item-edicao-info {
+            flex: 1;
+        }
+
+        .item-edicao-nome {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .item-edicao-detalhes {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .item-edicao-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+
+        .totais-edicao {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            margin-top: 20px;
+        }
+
+        .totais-edicao .total-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .totais-edicao .total-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 18px;
+            color: #007bff;
+            margin-top: 10px;
+            padding-top: 15px;
+            border-top: 2px solid #007bff;
+        }
+
+        .empty-items {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            background-color: white;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+        }
+
+        .empty-items-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        /* css para x dentro do campo de pesquisa */
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            padding-right: 30px;
+            /* espaço para o X */
+        }
+
+        .clear-icon {
+            position: absolute;
+            right: 10px;
+            font-size: 18px;
+            color: #888;
+            cursor: pointer;
+            display: none;
+            user-select: none;
+        }
+
+        .search-input:not(:placeholder-shown)+.clear-icon {
+            display: block;
+        }
+
+        .search-input:focus+.clear-icon {
+            display: block;
+        }
+
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 20px;
+                width: 95%;
+            }
+
+            .orcamento-info {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .itens-table {
+                font-size: 14px;
+            }
+
+            .itens-table th,
+            .itens-table td {
+                padding: 8px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item-actions {
+                margin-top: 10px;
+                width: 100%;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .item-edicao {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .item-edicao-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .form-section {
+                padding: 15px;
+            }
+
+            .item-actions {
+                display: flex;
+                gap: 10px;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 Orçamentos</h1>
+        </div>
+
+        <div class="main-content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('novo-orcamento')">Novo Orçamento</button>
+                <button class="tab" onclick="showTab('meus-orcamentos')">Meus Orçamentos</button>
+                <button class="tab" onclick="showTab('materiais')">Materiais</button>
+            </div>
+
+            <div id="novo-orcamento" class="tab-content active">
+                <div class="grid">
+                    <div class="card">
+                        <h3>📋 Informações do Orçamento</h3>
+                        <div class="form-group">
+                            <label for="orcamento-nome">Nome do Orçamento</label>
+                            <input type="text" id="orcamento-nome" placeholder="Ex: Bolo de Aniversário 2kg">
+                        </div>
+                        <div class="form-group">
+                            <label for="orcamento-descricao">Descrição</label>
+                            <textarea id="orcamento-descricao" rows="3"
+                                placeholder="Descreva os detalhes do orçamento..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="margem-lucro">Margem de Lucro (%)</label>
+                            <input type="number" id="margem-lucro" placeholder="20" min="0" max="100">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>🛒 Adicionar Item</h3>
+                        <div class="form-group ">
+                            <label for="item-nome">Nome do Item</label>
+                            <div class="autocomplete-container" style="position: relative;">
+                                <div class="search-container">
+                                    <input type="text" id="item-nome" placeholder="Ex: Farinha de Trigo"
+                                        autocomplete="off" class="search-input">
+                                    <span class="clear-icon" onclick="limparCampoBusca(this)">×</span>
+                                </div>
+                                <div id="dropdown-materiais" class="dropdown-suggestions"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-preco">Preço Unitário (R$)</label>
+                            <input type="number" id="item-preco" placeholder="3.50" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="item-quantidade">Quantidade</label>
+                            <input type="number" id="item-quantidade" placeholder="0.5" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="item-unidade">Unidade</label>
+                            <select id="item-unidade">
+                                <option value="kg">Quilograma (kg)</option>
+                                <option value="g">Grama (g)</option>
+                                <option value="l">Litro (l)</option>
+                                <option value="ml">Mililitro (ml)</option>
+                                <option value="un">Unidade (un)</option>
+                                <option value="m">Metro (m)</option>
+                                <option value="cm">Centímetro (cm)</option>
+                                <option value="m²">Metro Quadrado (m²)</option>
+                                <option value="h">Hora (h)</option>
+                                <option value="min">Minuto (min)</option>
+                                <option value="pc">Pacote (pc)</option>
+                            </select>
+                        </div>
+                        <button class="btn" onclick="adicionarItem()">Adicionar Item</button>
+                    </div>
+                </div>
+
+                <div class="item-list">
+                    <h3>📦 Itens do Orçamento</h3>
+                    <div id="lista-itens">
+                        <div class="empty-state">
+                            <div style="font-size: 3em; margin-bottom: 20px;">📋</div>
+                            <p>Nenhum item adicionado ainda</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="total-section">
+                    <h3>💰 Valor Total</h3>
+                    <div class="total-value">R$ <span id="total-valor">0,00</span></div>
+                    <button class="btn" onclick="salvarOrcamento()" style="margin-top: 20px;">Salvar Orçamento</button>
+                </div>
+            </div>
+
+            <div id="meus-orcamentos" class="tab-content">
+                <div class="card">
+                    <h3>📊 Meus Orçamentos Salvos</h3>
+                    <div class="form-group">
+                        <label for="busca-orcamentos">🔍 Buscar Orçamentos</label>
+                        <div class="search-container">
+                            <input type="text" id="busca-orcamentos" placeholder="Digite..."
+                                oninput="buscarOrcamentos()" class="search-input">
+                            <span class="clear-icon" onclick="limparCampoBusca(this)">×</span>
+                        </div>
+
+                    </div>
+                    <div id="lista-orcamentos">
+                        <div class="empty-state">
+                            <div style="font-size: 3em; margin-bottom: 20px;">📊</div>
+                            <p>Nenhum orçamento salvo ainda</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="materiais" class="tab-content">
+                <div class="card">
+                    <h3>📦 Cadastrar Material</h3>
+                    <div class="form-group">
+                        <label for="material-nome">Nome do Material</label>
+                        <div class="search-container">
+                            <input type="text" id="material-nome" placeholder="Ex: Farinha de Trigo"
+                                class="search-input">
+                            <span class="clear-icon" onclick="limparCampoBusca(this)">×</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="material-preco">Preço Unitário (R$)</label>
+                        <input type="number" id="material-preco" placeholder="3.50" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="material-unidade">Unidade</label>
+                        <select id="material-unidade">
+                            <option value="kg">Quilograma (kg)</option>
+                            <option value="g">Grama (g)</option>
+                            <option value="l">Litro (l)</option>
+                            <option value="ml">Mililitro (ml)</option>
+                            <option value="un">Unidade (un)</option>
+                            <option value="m">Metro (m)</option>
+                            <option value="cm">Centímetro (cm)</option>
+                            <option value="m²">Metro Quadrado (m²)</option>
+                            <option value="h">Hora (h)</option>
+                            <option value="min">Minuto (min)</option>
+                        </select>
+                    </div>
+                    <button class="btn" onclick="salvarMaterial()">Salvar Material</button>
+                </div>
+
+                <div class="item-list">
+                    <h3>📦 Materiais Cadastrados</h3>
+                    <div class="form-group">
+                        <label for="busca-materiais">🔍 Buscar Materiais</label>
+                        <div class="search-container">
+                            <input type="text" id="busca-materiais" placeholder="Digite o nome do material..."
+                                oninput="buscarMateriais()" class="search-input">
+                            <span class="clear-icon" onclick="limparCampoBusca(this)">×</span>
+                        </div>
+                    </div>
+
+                    <div id="lista-materiais">
+                        <div class="empty-state">
+                            <div style="font-size: 3em; margin-bottom: 20px;">📦</div>
+                            <p>Nenhum material cadastrado ainda</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal para editar material -->
+        <div id="modal-editar-material" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="fecharModal('modal-editar-material')">&times;</span>
+                <h2>Editar Material</h2>
+                <form id="form-editar-material">
+                    <div class="form-group">
+                        <label>Nome:</label>
+                        <input type="text" id="edit-material-nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Preço:</label>
+                        <input type="number" id="edit-material-preco" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Unidade:</label>
+                        <select id="edit-material-unidade">
+                            <option value="un">Unidade</option>
+                            <option value="kg">Quilograma</option>
+                            <option value="m">Metro</option>
+                            <option value="m²">Metro²</option>
+                            <option value="m³">Metro³</option>
+                            <option value="l">Litro</option>
+                            <option value="cx">Caixa</option>
+                            <option value="pct">Pacote</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="fecharModal('modal-editar-material')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal para editar orçamento -->
+        <div id="modal-editar-orcamento" class="modal">
+            <div class="modal-content modal-large">
+                <span class="close" onclick="fecharModal('modal-editar-orcamento')">&times;</span>
+                <h2>Editar Orçamento</h2>
+
+                <!-- Informações básicas -->
+                <div class="form-section">
+                    <h3>Informações Básicas</h3>
+                    <form id="form-editar-orcamento">
+                        <div class="form-group">
+                            <label>Nome:</label>
+                            <input type="text" id="edit-orcamento-nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Descrição:</label>
+                            <textarea id="edit-orcamento-descricao" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Margem de Lucro (%):</label>
+                            <input type="number" id="edit-orcamento-margem" step="0.1" min="0">
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Gerenciar itens -->
+                <div class="form-section">
+                    <h3>Gerenciar Itens</h3>
+
+                    <!-- Adicionar novo item -->
+                    <div class="add-item-section">
+                        <h4>Adicionar Item</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nome:</label>
+                                <div class="autocomplete-container" style="position: relative;">
+                                    <div class="search-container">
+                                        <input type="text" id="edit-item-nome" placeholder="Digite o nome do item"
+                                            class="search-input" autocomplete="off"
+                                            oninput="buscarAutocompleteEdicao()">
+                                        <span class="clear-icon" onclick="limparCampoBusca(this)">×</span>
+                                    </div>
+                                    <div id="edit-dropdown-materiais" class="dropdown-suggestions"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Preço:</label>
+                                <input type="number" id="edit-item-preco" step="0.01" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Quantidade:</label>
+                                <input type="number" id="edit-item-quantidade" step="0.01" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Unidade:</label>
+                                <select id="edit-item-unidade">
+                                    <option value="un">Unidade</option>
+                                    <option value="kg">Quilograma</option>
+                                    <option value="m">Metro</option>
+                                    <option value="m²">Metro²</option>
+                                    <option value="m³">Metro³</option>
+                                    <option value="l">Litro</option>
+                                    <option value="cx">Caixa</option>
+                                    <option value="pct">Pacote</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <button type="button" class="btn btn-primary"
+                                    onclick="adicionarItemEdicao()">Adicionar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lista de itens -->
+                    <div class="items-list-section">
+                        <h4>Itens do Orçamento</h4>
+                        <div id="lista-itens-edicao"></div>
+                    </div>
+
+                    <!-- Totais -->
+                    <div class="totais-edicao">
+                        <div class="total-item">
+                            <span>Subtotal:</span>
+                            <span id="edit-subtotal">R$ 0,00</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Lucro:</span>
+                            <span id="edit-lucro">R$ 0,00</span>
+                        </div>
+                        <div class="total-item total-final">
+                            <span>TOTAL:</span>
+                            <span id="edit-total">R$ 0,00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary"
+                        onclick="fecharModal('modal-editar-orcamento')">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="salvarEdicaoOrcamento()">Salvar
+                        Alterações</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para ver detalhes do orçamento -->
+        <div id="modal-detalhes-orcamento" class="modal">
+            <div class="modal-content modal-large">
+                <span class="close" onclick="fecharModal('modal-detalhes-orcamento')">&times;</span>
+                <div id="conteudo-detalhes-orcamento"></div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary"
+                        onclick="fecharModal('modal-detalhes-orcamento')">Fechar</button>
+                    <button type="button" class="btn btn-primary"
+                        onclick="compartilharOrcamento()">Compartilhar</button>
+                    <button type="button" class="btn btn-success" onclick="imprimirOrcamento()">Imprimir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let itensOrcamento = [];
+        let materiais = [];
+        let orcamentos = [];
+        let orcamentosFiltrados = [];
+        let materiaisFiltrados = [];
+        // Variável para controlar o orçamento sendo editado
+        let orcamentoEditando = null;
+        let db;
+
+        // Função para normalizar texto (remover acentos e converter para minúsculas)
+        function normalizarTexto(texto) {
+            return texto.normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase();
+        }
+
+        // Inicialização do IndexedDB
+        function initDB() {
+            const request = indexedDB.open('OrcamentosDB', 1);
+
+            request.onerror = function (event) {
+                console.error('Erro ao abrir banco de dados');
+            };
+
+            request.onsuccess = function (event) {
+                db = event.target.result;
+                carregarDados();
+            };
+
+            request.onupgradeneeded = function (event) {
+                db = event.target.result;
+
+                // Criar tabela de orçamentos
+                if (!db.objectStoreNames.contains('orcamentos')) {
+                    const orcamentosStore = db.createObjectStore('orcamentos', { keyPath: 'id', autoIncrement: true });
+                    orcamentosStore.createIndex('nome', 'nome', { unique: false });
+                }
+
+                // Criar tabela de materiais
+                if (!db.objectStoreNames.contains('materiais')) {
+                    const materiaisStore = db.createObjectStore('materiais', { keyPath: 'id', autoIncrement: true });
+                    materiaisStore.createIndex('nome', 'nome', { unique: false });
+                }
+            };
+        }
+
+        // Carregar dados do IndexedDB
+        function carregarDados() {
+            carregarOrcamentos();
+            carregarMateriais();
+        }
+
+        // Carregar orçamentos
+        function carregarOrcamentos() {
+            const transaction = db.transaction(['orcamentos'], 'readonly');
+            const store = transaction.objectStore('orcamentos');
+            const request = store.getAll();
+
+            request.onsuccess = function (event) {
+                orcamentos = event.target.result;
+                orcamentosFiltrados = [...orcamentos];
+                renderizarOrcamentos();
+            };
+        }
+
+        // Carregar materiais
+        function carregarMateriais() {
+            const transaction = db.transaction(['materiais'], 'readonly');
+            const store = transaction.objectStore('materiais');
+            const request = store.getAll();
+
+            request.onsuccess = function (event) {
+                materiais = event.target.result;
+                materiaisFiltrados = [...materiais];
+                renderizarMateriais();
+                configurarAutocomplete(); // Configurar autocomplete após carregar materiais
+            };
+        }
+
+        // Controle de abas
+        function showTab(tabName) {
+            // Esconder todas as abas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remover classe active de todos os botões
+            document.querySelectorAll('.tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Mostrar aba selecionada
+            document.getElementById(tabName).classList.add('active');
+
+            // Adicionar classe active ao botão
+            event.target.classList.add('active');
+        }
+
+        // Adicionar item ao orçamento
+        function adicionarItem() {
+            const nome = document.getElementById('item-nome').value;
+            const preco = parseFloat(document.getElementById('item-preco').value);
+            const quantidade = parseFloat(document.getElementById('item-quantidade').value);
+            const unidade = document.getElementById('item-unidade').value;
+
+            if (!nome || !preco || !quantidade) {
+                alert('Por favor, preencha todos os campos');
+                return;
+            }
+
+            const item = {
+                id: Date.now(),
+                nome: nome,
+                preco: preco,
+                quantidade: quantidade,
+                unidade: unidade,
+                total: preco * quantidade
+            };
+
+            itensOrcamento.push(item);
+
+            // Adicionar automaticamente como material se não existir
+            adicionarMaterialAutomatico(nome, preco, unidade);
+
+            // Limpar campos
+            document.getElementById('item-nome').value = '';
+            document.getElementById('item-preco').value = '';
+            document.getElementById('item-quantidade').value = '';
+            document.getElementById('dropdown-materiais').classList.remove('show');
+
+            renderizarItens();
+            calcularTotal();
+        }
+
+        // Adicionar material automaticamente
+        function adicionarMaterialAutomatico(nome, preco, unidade) {
+            // Verificar se já existe um material com o mesmo nome
+            const materialExistente = materiais.find(m => m.nome.toLowerCase() === nome.toLowerCase());
+
+            if (materialExistente) {
+                // Se existe mas o preço é diferente, atualizar o preço
+                if (materialExistente.preco !== preco) {
+                    const transaction = db.transaction(['materiais'], 'readwrite');
+                    const store = transaction.objectStore('materiais');
+                    materialExistente.preco = preco;
+                    store.put(materialExistente);
+
+                    // Atualizar array local
+                    const index = materiais.findIndex(m => m.id === materialExistente.id);
+                    materiais[index] = materialExistente;
+                }
+                return;
+            }
+
+            // Criar novo material
+            const novoMaterial = {
+                nome: nome,
+                preco: preco,
+                unidade: unidade
+            };
+
+            const transaction = db.transaction(['materiais'], 'readwrite');
+            const store = transaction.objectStore('materiais');
+            const request = store.add(novoMaterial);
+
+            request.onsuccess = function (event) {
+                novoMaterial.id = event.target.result;
+                materiais.push(novoMaterial);
+                materiaisFiltrados = [...materiais];
+                renderizarMateriais();
+            };
+        }
+
+        // Configurar autocomplete para materiais
+        function configurarAutocomplete() {
+            const inputNome = document.getElementById('item-nome');
+            const dropdown = document.getElementById('dropdown-materiais');
+
+            inputNome.addEventListener('input', function (e) {
+                const valor = e.target.value.toLowerCase();
+
+                if (valor.length === 0) {
+                    dropdown.classList.remove('show');
+                    return;
+                }
+
+                // Filtrar materiais que começam com o texto digitado
+                const materiaisFiltrados = materiais.filter(material =>
+                    material.nome.toLowerCase().includes(valor)
+                );
+
+                if (materiaisFiltrados.length > 0) {
+                    dropdown.innerHTML = materiaisFiltrados.map(material => `
+                        <div class="dropdown-item" onclick="selecionarMaterial(${material.id})">
+                            <div class="dropdown-item-name">${material.nome}</div>
+                            <div class="dropdown-item-details">R$ ${material.preco.toFixed(2)} por ${material.unidade}</div>
+                        </div>
+                    `).join('');
+                    dropdown.classList.add('show');
+                } else {
+                    dropdown.classList.remove('show');
+                }
+            });
+
+            // Fechar dropdown quando clicar fora
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.autocomplete-container')) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        }
+
+        // Selecionar material do dropdown
+        function selecionarMaterial(id) {
+            const material = materiais.find(m => m.id === id);
+            if (!material) return;
+
+            document.getElementById('item-nome').value = material.nome;
+            document.getElementById('item-preco').value = material.preco;
+            document.getElementById('item-unidade').value = material.unidade;
+            document.getElementById('dropdown-materiais').classList.remove('show');
+
+            // Focar no campo de quantidade
+            document.getElementById('item-quantidade').focus();
+        }
+
+        // Buscar orçamentos
+        function buscarOrcamentos() {
+            const termoBusca = document.getElementById('busca-orcamentos').value;
+
+            if (termoBusca.trim() === '') {
+                orcamentosFiltrados = [...orcamentos];
+            } else {
+                const termoNormalizado = normalizarTexto(termoBusca);
+                orcamentosFiltrados = orcamentos.filter(orcamento => {
+                    const nomeNormalizado = normalizarTexto(orcamento.nome);
+                    const descricaoNormalizada = normalizarTexto(orcamento.descricao || '');
+
+                    return nomeNormalizado.includes(termoNormalizado) ||
+                        descricaoNormalizada.includes(termoNormalizado);
+                });
+            }
+
+            renderizarOrcamentos();
+        }
+
+        // Buscar materiais
+        function buscarMateriais() {
+            const termoBusca = document.getElementById('busca-materiais').value;
+
+            if (termoBusca.trim() === '') {
+                materiaisFiltrados = [...materiais];
+            } else {
+                const termoNormalizado = normalizarTexto(termoBusca);
+                materiaisFiltrados = materiais.filter(material => {
+                    const nomeNormalizado = normalizarTexto(material.nome);
+
+                    return nomeNormalizado.includes(termoNormalizado);
+                });
+            }
+
+            renderizarMateriais();
+        }
+
+        // Renderizar itens do orçamento
+        function renderizarItens() {
+            const listaItens = document.getElementById('lista-itens');
+
+            if (itensOrcamento.length === 0) {
+                listaItens.innerHTML = `
+                    <div class="empty-state">
+                        <div style="font-size: 3em; margin-bottom: 20px;">📋</div>
+                        <p>Nenhum item adicionado ainda</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listaItens.innerHTML = itensOrcamento.map(item => `
+                <div class="item">
+                    <div class="item-info">
+                        <div class="item-name">${item.nome}</div>
+                        <div class="item-details">
+                            ${item.quantidade} ${item.unidade} × R$ ${item.preco.toFixed(2)} = R$ ${item.total.toFixed(2)}
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-danger" onclick="removerItem(${item.id})">Remover</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Remover item
+        function removerItem(id) {
+            itensOrcamento = itensOrcamento.filter(item => item.id !== id);
+            renderizarItens();
+            calcularTotal();
+        }
+
+        // Calcular total
+        function calcularTotal() {
+            const subtotal = itensOrcamento.reduce((total, item) => total + item.total, 0);
+            const margemLucro = parseFloat(document.getElementById('margem-lucro').value) || 0;
+            const lucro = subtotal * (margemLucro / 100);
+            const total = subtotal + lucro;
+
+            document.getElementById('total-valor').textContent = total.toFixed(2).replace('.', ',');
+        }
+
+        // Salvar orçamento
+        function salvarOrcamento() {
+            const nome = document.getElementById('orcamento-nome').value;
+            const descricao = document.getElementById('orcamento-descricao').value;
+            const margemLucro = parseFloat(document.getElementById('margem-lucro').value) || 0;
+
+            if (!nome || itensOrcamento.length === 0) {
+                alert('Por favor, preencha o nome e adicione pelo menos um item');
+                return;
+            }
+
+            const subtotal = itensOrcamento.reduce((total, item) => total + item.total, 0);
+            const lucro = subtotal * (margemLucro / 100);
+            const total = subtotal + lucro;
+
+            const orcamento = {
+                nome: nome,
+                descricao: descricao,
+                itens: [...itensOrcamento],
+                margemLucro: margemLucro,
+                subtotal: subtotal,
+                lucro: lucro,
+                total: total,
+                data: new Date().toLocaleDateString('pt-BR')
+            };
+
+            // Salvar no IndexedDB
+            const transaction = db.transaction(['orcamentos'], 'readwrite');
+            const store = transaction.objectStore('orcamentos');
+            const request = store.add(orcamento);
+
+            request.onsuccess = function () {
+                alert('Orçamento salvo com sucesso!');
+                limparOrcamento();
+                carregarOrcamentos();
+            };
+
+            request.onerror = function () {
+                alert('Erro ao salvar orçamento');
+            };
+        }
+
+        // Limpar orçamento
+        function limparOrcamento() {
+            document.getElementById('orcamento-nome').value = '';
+            document.getElementById('orcamento-descricao').value = '';
+            document.getElementById('margem-lucro').value = '';
+            itensOrcamento = [];
+            renderizarItens();
+            calcularTotal();
+        }
+
+        function renderizarOrcamentos() {
+            const listaOrcamentos = document.getElementById('lista-orcamentos');
+
+            // Limite de orçamentos mostrados inicialmente
+            const LIMITE_INICIAL = 3;
+
+            if (orcamentosFiltrados.length === 0) {
+                if (orcamentos.length === 0) {
+                    listaOrcamentos.innerHTML = `
+                <div class="empty-state">
+                    <div style="font-size: 3em; margin-bottom: 20px;">📊</div>
+                    <p>Nenhum orçamento salvo ainda</p>
+                </div>
+            `;
+                } else {
+                    listaOrcamentos.innerHTML = `
+                <div class="empty-state">
+                    <div style="font-size: 3em; margin-bottom: 20px;">🔍</div>
+                    <p>Nenhum orçamento encontrado com esse termo</p>
+                </div>
+            `;
+                }
+                return;
+            }
+
+            // Verifica se está fazendo busca ou não
+            const estaBuscando = document.getElementById('busca-orcamentos')?.value.trim().length > 0;
+
+            // Define a lista a ser mostrada
+            const orcamentosParaMostrar = estaBuscando
+                ? orcamentosFiltrados
+                : orcamentosFiltrados.slice(0, LIMITE_INICIAL);
+
+            // Renderiza os orçamentos na tela
+            listaOrcamentos.innerHTML = orcamentosParaMostrar.map(orcamento => `
+        <div class="item">
+            <div class="item-info">
+                <div class="item-name">${orcamento.nome}</div>
+                <div class="item-details">
+                    ${orcamento.descricao || 'Sem descrição'} | ${orcamento.itens.length} itens | R$ ${orcamento.total.toFixed(2)}
+                    <br>Criado em: ${orcamento.data}
+                </div>
+            </div>
+            <div class="item-actions">
+                <button class="btn" onclick="verOrcamento(${orcamento.id})">Ver Detalhes</button>
+                <button class="btn" onclick="editarOrcamento(${orcamento.id})">Editar</button>
+                <button class="btn btn-danger" onclick="excluirOrcamento(${orcamento.id})">Excluir</button>
+            </div>
+        </div>
+    `).join('');
+        }
+
+
+        // Ver detalhes do orçamento
+        function verOrcamento(id) {
+            const orcamento = orcamentos.find(o => o.id === id);
+            if (!orcamento) return;
+
+            const conteudo = document.getElementById('conteudo-detalhes-orcamento');
+            conteudo.innerHTML = `
+        <div class="orcamento-header">
+            <h1 class="orcamento-title">${orcamento.nome}</h1>
+            <p>${orcamento.descricao || 'Sem descrição'}</p>
+        </div>
+        
+        <div class="orcamento-info">
+            <div class="info-item">
+                <div class="info-label">Data de Criação</div>
+                <div class="info-value">${orcamento.data}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Quantidade de Itens</div>
+                <div class="info-value">${orcamento.itens.length} itens</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Margem de Lucro</div>
+                <div class="info-value">${orcamento.margemLucro}%</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Valor Total</div>
+                <div class="info-value">R$ ${orcamento.total.toFixed(2).replace('.', ',')}</div>
+            </div>
+        </div>
+        
+        <h3>Itens do Orçamento</h3>
+        <table class="itens-table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantidade</th>
+                    <th>Unidade</th>
+                    <th>Preço Unit.</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${orcamento.itens.map(item => `
+                    <tr>
+                        <td>${item.nome}</td>
+                        <td>${item.quantidade}</td>
+                        <td>${item.unidade}</td>
+                        <td>R$ ${item.preco.toFixed(2).replace('.', ',')}</td>
+                        <td>R$ ${item.total.toFixed(2).replace('.', ',')}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+        
+        <div class="totais-container">
+            <div class="total-item">
+                <span class="total-label">Subtotal:</span>
+                <span class="total-value">R$ ${orcamento.subtotal.toFixed(2).replace('.', ',')}</span>
+            </div>
+            <div class="total-item">
+                <span class="total-label">Lucro (${orcamento.margemLucro}%):</span>
+                <span class="total-value">R$ ${orcamento.lucro.toFixed(2).replace('.', ',')}</span>
+            </div>
+            <div class="total-item">
+                <span class="total-label">TOTAL FINAL:</span>
+                <span class="total-value">R$ ${orcamento.total.toFixed(2).replace('.', ',')}</span>
+            </div>
+        </div>
+    `;
+
+            // Armazenar ID do orçamento atual para compartilhamento
+            document.getElementById('modal-detalhes-orcamento').dataset.orcamentoId = id;
+            abrirModal('modal-detalhes-orcamento');
+        }
+
+        // ADICIONAR estas novas funções:
+
+        // Função para abrir modal
+        function abrirModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Função para fechar modal
+        function fecharModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+
+            // Limpar dados de edição quando fechar modal de orçamento
+            if (modalId === 'modal-editar-orcamento') {
+                orcamentoEditando = null;
+                document.getElementById('edit-dropdown-materiais').classList.remove('show');
+            }
+        }
+
+        // Função para editar material
+        function editarMaterial(id) {
+            const material = materiais.find(m => m.id === id);
+            if (!material) return;
+
+            // Preencher formulário
+            document.getElementById('edit-material-nome').value = material.nome;
+            document.getElementById('edit-material-preco').value = material.preco;
+            document.getElementById('edit-material-unidade').value = material.unidade;
+
+            // Armazenar ID do material
+            document.getElementById('form-editar-material').dataset.materialId = id;
+
+            abrirModal('modal-editar-material');
+        }
+
+        // Função para salvar alterações do material
+        function salvarEdicaoMaterial(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const materialId = parseInt(form.dataset.materialId);
+            const material = materiais.find(m => m.id === materialId);
+
+            if (!material) return;
+
+            // Atualizar dados
+            material.nome = document.getElementById('edit-material-nome').value;
+            material.preco = parseFloat(document.getElementById('edit-material-preco').value);
+            material.unidade = document.getElementById('edit-material-unidade').value;
+
+            // Salvar no IndexedDB
+            const transaction = db.transaction(['materiais'], 'readwrite');
+            const store = transaction.objectStore('materiais');
+            const request = store.put(material);
+
+            request.onsuccess = function () {
+                alert('Material atualizado com sucesso!');
+                fecharModal('modal-editar-material');
+                materiaisFiltrados = [...materiais];
+                renderizarMateriais();
+            };
+
+            request.onerror = function () {
+                alert('Erro ao atualizar material');
+            };
+        }
+
+        // Função para editar orçamento
+        // SUBSTITUIR a função editarOrcamento por esta:
+        function editarOrcamento(id) {
+            const orcamento = orcamentos.find(o => o.id === id);
+            if (!orcamento) return;
+
+            // Criar cópia do orçamento para edição
+            orcamentoEditando = {
+                ...orcamento,
+                itens: [...orcamento.itens.map(item => ({ ...item }))]
+            };
+
+            // Preencher formulário básico
+            document.getElementById('edit-orcamento-nome').value = orcamento.nome;
+            document.getElementById('edit-orcamento-descricao').value = orcamento.descricao || '';
+            document.getElementById('edit-orcamento-margem').value = orcamento.margemLucro;
+
+            // Armazenar ID do orçamento
+            document.getElementById('modal-editar-orcamento').dataset.orcamentoId = id;
+
+            // Renderizar itens e configurar autocomplete
+            renderizarItensEdicao();
+            configurarAutocompleteEdicao();
+            calcularTotaisEdicao();
+
+            // Adicionar listener para mudança na margem
+            document.getElementById('edit-orcamento-margem').addEventListener('input', calcularTotaisEdicao);
+
+            abrirModal('modal-editar-orcamento');
+        }
+
+        // Função para salvar alterações do orçamento
+        function salvarEdicaoOrcamento() {
+            const modalElement = document.getElementById('modal-editar-orcamento');
+            const orcamentoId = parseInt(modalElement.dataset.orcamentoId);
+            const orcamento = orcamentos.find(o => o.id === orcamentoId);
+
+            if (!orcamento) return;
+
+            const nome = document.getElementById('edit-orcamento-nome').value;
+            const descricao = document.getElementById('edit-orcamento-descricao').value;
+            const margemLucro = parseFloat(document.getElementById('edit-orcamento-margem').value) || 0;
+
+            if (!nome || orcamentoEditando.itens.length === 0) {
+                alert('Por favor, preencha o nome e adicione pelo menos um item');
+                return;
+            }
+
+            // Atualizar dados do orçamento
+            orcamento.nome = nome;
+            orcamento.descricao = descricao;
+            orcamento.margemLucro = margemLucro;
+            orcamento.itens = [...orcamentoEditando.itens];
+
+            // Recalcular totais
+            orcamento.subtotal = orcamento.itens.reduce((total, item) => total + item.total, 0);
+            orcamento.lucro = orcamento.subtotal * (margemLucro / 100);
+            orcamento.total = orcamento.subtotal + orcamento.lucro;
+
+            // Salvar no IndexedDB
+            const transaction = db.transaction(['orcamentos'], 'readwrite');
+            const store = transaction.objectStore('orcamentos');
+            const request = store.put(orcamento);
+
+            request.onsuccess = function () {
+                alert('Orçamento atualizado com sucesso!');
+                fecharModal('modal-editar-orcamento');
+                orcamentoEditando = null;
+                orcamentosFiltrados = [...orcamentos];
+                renderizarOrcamentos();
+            };
+
+            request.onerror = function () {
+                alert('Erro ao atualizar orçamento');
+            };
+        }
+
+        // Função para compartilhar orçamento
+        function compartilharOrcamento() {
+            const modalId = document.getElementById('modal-detalhes-orcamento').dataset.orcamentoId;
+            const orcamento = orcamentos.find(o => o.id == modalId);
+
+            if (!orcamento) return;
+
+            const texto = `
+ORÇAMENTO: ${orcamento.nome}
+
+DESCRIÇÃO: ${orcamento.descricao || 'Sem descrição'}
+
+ITENS:
+${orcamento.itens.map(item =>
+                `• ${item.nome}: ${item.quantidade} ${item.unidade} × R$ ${item.preco.toFixed(2)} = R$ ${item.total.toFixed(2)}`
+            ).join('\n')}
+
+
+TOTAL FINAL: R$ ${orcamento.total.toFixed(2)}
+
+Data: ${orcamento.data}
+    `.trim();
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `Orçamento: ${orcamento.nome}`,
+                    text: texto
+                });
+            } else {
+                // Fallback para copiar para clipboard
+                navigator.clipboard.writeText(texto).then(() => {
+                    alert('Orçamento copiado para a área de transferência!');
+                }).catch(() => {
+                    // Fallback manual
+                    const textarea = document.createElement('textarea');
+                    textarea.value = texto;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    alert('Orçamento copiado para a área de transferência!');
+                });
+            }
+        }
+
+        // Função para imprimir orçamento
+        function imprimirOrcamento() {
+            const conteudo = document.getElementById('conteudo-detalhes-orcamento').innerHTML;
+            const janelaImpressao = window.open('', '_blank');
+
+            janelaImpressao.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Orçamento</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 20px; }
+                .orcamento-header { text-align: center; margin-bottom: 30px; }
+                .orcamento-title { font-size: 24px; margin-bottom: 10px; }
+                .orcamento-info { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+                .info-item { padding: 10px; border: 1px solid #ddd; }
+                .info-label { font-weight: bold; color: #666; font-size: 12px; }
+                .info-value { font-size: 14px; }
+                .itens-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+                .itens-table th, .itens-table td { padding: 8px; border: 1px solid #ddd; }
+                .itens-table th { background-color: #f5f5f5; }
+                .totais-container { border: 1px solid #ddd; padding: 15px; }
+                .total-item { display: flex; justify-content: space-between; padding: 5px 0; }
+                .total-item:last-child { font-weight: bold; font-size: 16px; }
+            </style>
+        </head>
+        <body>
+            ${conteudo}
+        </body>
+        </html>
+    `);
+
+            janelaImpressao.document.close();
+            janelaImpressao.print();
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function (event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    fecharModal(modal.id);
+                }
+            });
+        }
+
+        // Excluir orçamento
+        function excluirOrcamento(id) {
+            if (!confirm('Tem certeza que deseja excluir este orçamento?')) return;
+
+            const transaction = db.transaction(['orcamentos'], 'readwrite');
+            const store = transaction.objectStore('orcamentos');
+            const request = store.delete(id);
+
+            request.onsuccess = function () {
+                alert('Orçamento excluído com sucesso!');
+                carregarOrcamentos();
+            };
+        }
+
+        // Salvar material
+        function salvarMaterial() {
+            const nome = document.getElementById('material-nome').value;
+            const preco = parseFloat(document.getElementById('material-preco').value);
+            const unidade = document.getElementById('material-unidade').value;
+
+            if (!nome || !preco) {
+                alert('Por favor, preencha todos os campos');
+                return;
+            }
+
+            const material = {
+                nome: nome,
+                preco: preco,
+                unidade: unidade
+            };
+
+            const transaction = db.transaction(['materiais'], 'readwrite');
+            const store = transaction.objectStore('materiais');
+            const request = store.add(material);
+
+            request.onsuccess = function () {
+                alert('Material salvo com sucesso!');
+                document.getElementById('material-nome').value = '';
+                document.getElementById('material-preco').value = '';
+                carregarMateriais();
+            };
+        }
+
+        // Renderizar materiais
+        function renderizarMateriais() {
+            const listaMateriais = document.getElementById('lista-materiais');
+
+            // Limite de materiais exibidos quando não há filtro
+            const LIMITE_INICIAL = 3;
+
+            if (materiaisFiltrados.length === 0) {
+                if (materiais.length === 0) {
+                    listaMateriais.innerHTML = `
+                <div class="empty-state">
+                    <div style="font-size: 3em; margin-bottom: 20px;">📦</div>
+                    <p>Nenhum material cadastrado ainda</p>
+                </div>
+            `;
+                } else {
+                    listaMateriais.innerHTML = `
+                <div class="empty-state">
+                    <div style="font-size: 3em; margin-bottom: 20px;">🔍</div>
+                    <p>Nenhum material encontrado com esse termo</p>
+                </div>
+            `;
+                }
+                return;
+            }
+
+            // Se não há busca (campo vazio), renderiza só os primeiros N
+            const estaBuscando = document.getElementById('busca-materiais')?.value.trim().length > 0;
+            const materiaisParaMostrar = estaBuscando
+                ? materiaisFiltrados
+                : materiaisFiltrados.slice(0, LIMITE_INICIAL);
+
+            listaMateriais.innerHTML = materiaisParaMostrar.map(material => `
+        <div class="item">
+            <div class="item-info">
+                <div class="item-name">${material.nome}</div>
+                <div class="item-details">R$ ${material.preco.toFixed(2)} por ${material.unidade}</div>
+            </div>
+            <div class="item-actions">
+                <button class="btn" onclick="usarMaterial(${material.id})">Usar no Orçamento</button>
+                <button class="btn" onclick="editarMaterial(${material.id})">Editar</button>
+                <button class="btn btn-danger" onclick="excluirMaterial(${material.id})">Excluir</button>
+            </div>
+        </div>
+    `).join('');
+        }
+
+
+        // Usar material no orçamento
+        function usarMaterial(id) {
+            const material = materiais.find(m => m.id === id);
+            if (!material) return;
+
+            document.getElementById('item-nome').value = material.nome;
+            document.getElementById('item-preco').value = material.preco;
+            document.getElementById('item-unidade').value = material.unidade;
+
+            // Mudar para a aba de novo orçamento
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById('novo-orcamento').classList.add('active');
+            document.querySelector('.tab').classList.add('active');
+
+            // Focar no campo de quantidade
+            document.getElementById('item-quantidade').focus();
+        }
+
+        // Excluir material
+        function excluirMaterial(id) {
+            if (!confirm('Tem certeza que deseja excluir este material?')) return;
+
+            const transaction = db.transaction(['materiais'], 'readwrite');
+            const store = transaction.objectStore('materiais');
+            const request = store.delete(id);
+
+            request.onsuccess = function () {
+                alert('Material excluído com sucesso!');
+                carregarMateriais();
+            };
+        }
+        // NOVA função para renderizar itens na edição
+        function renderizarItensEdicao() {
+            const listaItens = document.getElementById('lista-itens-edicao');
+
+            if (!orcamentoEditando.itens || orcamentoEditando.itens.length === 0) {
+                listaItens.innerHTML = `
+            <div class="empty-items">
+                <div class="empty-items-icon">📋</div>
+                <p>Nenhum item no orçamento</p>
+            </div>
+        `;
+                return;
+            }
+
+            listaItens.innerHTML = orcamentoEditando.itens.map(item => `
+        <div class="item-edicao">
+            <div class="item-edicao-info">
+                <div class="item-edicao-nome">${item.nome}</div>
+                <div class="item-edicao-detalhes">
+                    ${item.quantidade} ${item.unidade} × R$ ${item.preco.toFixed(2)} = R$ ${item.total.toFixed(2)}
+                </div>
+            </div>
+            <div class="item-edicao-actions">
+                <button class="btn btn-small" onclick="editarItemEdicao(${item.id})">Editar</button>
+                <button class="btn btn-danger btn-small" onclick="removerItemEdicao(${item.id})">Remover</button>
+            </div>
+        </div>
+    `).join('');
+        }
+
+        // NOVA função para configurar autocomplete na edição
+        function configurarAutocompleteEdicao() {
+            const inputNome = document.getElementById('edit-item-nome');
+            const dropdown = document.getElementById('edit-dropdown-materiais');
+
+            inputNome.addEventListener('input', function (e) {
+                const valor = e.target.value.toLowerCase();
+
+                if (valor.length === 0) {
+                    dropdown.innerHTML = '';
+                    dropdown.classList.remove('show');
+                    return;
+                }
+
+                const materiaisFiltrados = materiais.filter(material =>
+                    material.nome.toLowerCase().includes(valor)
+                );
+
+                if (materiaisFiltrados.length > 0) {
+                    dropdown.innerHTML = materiaisFiltrados.map(material => `
+                <div class="dropdown-item" onclick="selecionarMaterialEdicao(${material.id})">
+                    <div class="dropdown-item-name">${material.nome}</div>
+                    <div class="dropdown-item-details">R$ ${material.preco.toFixed(2)} por ${material.unidade}</div>
+                </div>
+            `).join('');
+                    dropdown.classList.add('show');
+                } else {
+                    dropdown.innerHTML = '';
+                    dropdown.classList.remove('show');
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.autocomplete-container')) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        }
+
+
+        // NOVA função para selecionar material na edição
+        function selecionarMaterialEdicao(id) {
+            const material = materiais.find(m => m.id === id);
+            if (!material) return;
+
+            document.getElementById('edit-item-nome').value = material.nome;
+            document.getElementById('edit-item-preco').value = material.preco;
+            document.getElementById('edit-item-unidade').value = material.unidade;
+            document.getElementById('edit-dropdown-materiais').classList.remove('show');
+
+            // Focar no campo de quantidade, se quiser
+            document.getElementById('edit-item-quantidade').focus();
+        }
+
+
+        // NOVA função para adicionar item na edição
+        function adicionarItemEdicao() {
+            const nome = document.getElementById('edit-item-nome').value;
+            const preco = parseFloat(document.getElementById('edit-item-preco').value);
+            const quantidade = parseFloat(document.getElementById('edit-item-quantidade').value);
+            const unidade = document.getElementById('edit-item-unidade').value;
+
+            if (!nome || !preco || !quantidade) {
+                alert('Por favor, preencha todos os campos');
+                return;
+            }
+
+            const novoItem = {
+                id: Date.now(),
+                nome: nome,
+                preco: preco,
+                quantidade: quantidade,
+                unidade: unidade,
+                total: preco * quantidade
+            };
+
+            orcamentoEditando.itens.push(novoItem);
+
+            // Adicionar automaticamente como material se não existir
+            adicionarMaterialAutomatico(nome, preco, unidade);
+
+            // Limpar campos
+            document.getElementById('edit-item-nome').value = '';
+            document.getElementById('edit-item-preco').value = '';
+            document.getElementById('edit-item-quantidade').value = '';
+            document.getElementById('edit-dropdown-materiais').classList.remove('show');
+
+            renderizarItensEdicao();
+            calcularTotaisEdicao();
+        }
+
+        // NOVA função para remover item na edição
+        function removerItemEdicao(id) {
+            if (!confirm('Tem certeza que deseja remover este item?')) return;
+
+            orcamentoEditando.itens = orcamentoEditando.itens.filter(item => item.id !== id);
+            renderizarItensEdicao();
+            calcularTotaisEdicao();
+        }
+
+        // NOVA função para editar item na edição
+        function editarItemEdicao(id) {
+            const item = orcamentoEditando.itens.find(i => i.id === id);
+            if (!item) return;
+
+            // Preencher campos com dados do item
+            document.getElementById('edit-item-nome').value = item.nome;
+            document.getElementById('edit-item-preco').value = item.preco;
+            document.getElementById('edit-item-quantidade').value = item.quantidade;
+            document.getElementById('edit-item-unidade').value = item.unidade;
+
+            // Remover item temporariamente
+            orcamentoEditando.itens = orcamentoEditando.itens.filter(i => i.id !== id);
+            renderizarItensEdicao();
+            calcularTotaisEdicao();
+
+            // Focar no campo de nome
+            document.getElementById('edit-item-nome').focus();
+        }
+
+        // NOVA função para calcular totais na edição
+        function calcularTotaisEdicao() {
+            const subtotal = orcamentoEditando.itens.reduce((total, item) => total + item.total, 0);
+            const margemLucro = parseFloat(document.getElementById('edit-orcamento-margem').value) || 0;
+            const lucro = subtotal * (margemLucro / 100);
+            const total = subtotal + lucro;
+
+            document.getElementById('edit-subtotal').textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+            document.getElementById('edit-lucro').textContent = `R$ ${lucro.toFixed(2).replace('.', ',')}`;
+            document.getElementById('edit-total').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+
+        //função limpar a busca ao pressionar o botão x
+        function limparCampoBusca(elementoX) {
+            const input = elementoX.previousElementSibling;
+            input.value = '';
+            input.dispatchEvent(new Event('input')); // reexecuta a busca
+        }
+
+
+
+        // Eventos
+        document.getElementById('margem-lucro').addEventListener('input', calcularTotal);
+        // Event listeners para os formulários dos modais
+        document.getElementById('form-editar-material').addEventListener('submit', salvarEdicaoMaterial);
+        document.getElementById('form-editar-orcamento').addEventListener('submit', salvarEdicaoOrcamento);
+        // Adicionar junto com os outros event listeners:
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.autocomplete-container')) {
+                const dropdown = document.getElementById('edit-dropdown-materiais');
+                if (dropdown) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        });
+
+        // Inicializar aplicação
+        initDB();
+    </script>
+</body>
+
+</html>
