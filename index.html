@@ -818,47 +818,48 @@
         }
 
         /* Oculto por padrão */
-.notificacao-oculta {
-    display: none;
-}
+        .notificacao-oculta {
+            display: none;
+        }
 
-/* Container da notificação cobrindo a tela */
-#notificacao {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.1);
-    z-index: 9999;
-    display: none;
-    align-items: flex-start;
-    justify-content: center;
-}
+        /* Container da notificação cobrindo a tela */
+        #notificacao {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+        }
 
-/* Tarja da notificação */
-.notificacao-barra {
-    background-color: #2ecc71;
-    color: white;
-    padding: 16px 24px;
-    margin-top: 20px;
-    border-radius: 0 0 8px 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    font-weight: bold;
-    animation: aparecer 0.3s ease;
-}
+        /* Tarja da notificação */
+        .notificacao-barra {
+            background-color: #2ecc71;
+            color: white;
+            padding: 16px 24px;
+            margin-top: 20px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            animation: aparecer 0.3s ease;
+        }
 
-/* Animação de entrada */
-@keyframes aparecer {
-    from {
-        transform: translateY(-30px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
+        /* Animação de entrada */
+        @keyframes aparecer {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
 
 
 
@@ -1002,17 +1003,40 @@
                             <input list="lista-item-unidade" id="item-unidade" name="item-unidade"
                                 class="form-control unid1" placeholder="Digite ou selecione">
                             <datalist id="lista-item-unidade">
+                                <!-- Massa -->
                                 <option value="Quilograma (kg)">
                                 <option value="Grama (g)">
+                                <option value="Tonelada (t)">
+                                <option value="Miligrama (mg)">
+
+                                    <!-- Volume -->
                                 <option value="Litro (l)">
                                 <option value="Mililitro (ml)">
-                                <option value="Unidade (un)">
+                                <option value="Metro Cúbico (m³)">
+                                <option value="Centímetro Cúbico (cm³)">
+
+                                    <!-- Comprimento -->
                                 <option value="Metro (m)">
                                 <option value="Centímetro (cm)">
+                                <option value="Milímetro (mm)">
+                                <option value="Polegada (in)">
+                                <option value="Pé (ft)">
+
+                                    <!-- Área -->
                                 <option value="Metro Quadrado (m²)">
+                                <option value="Centímetro Quadrado (cm²)">
+
+                                    <!-- Tempo -->
                                 <option value="Hora (h)">
                                 <option value="Minuto (min)">
+                                <option value="Segundo (s)">
+
+                                    <!-- Unidade -->
+                                <option value="Unidade (un)">
                                 <option value="Pacote (pc)">
+                                <option value="Caixa (cx)">
+                                <option value="Dúzia (dz)">
+                                <option value="Par (par)">
                             </datalist>
                             <button class="btn botaocentro" onclick="adicionarItem()">Adicionar Item</button>
                         </div>
@@ -1084,24 +1108,48 @@
                     </div>
                     <div class="form-group">
                         <label for="material-quantidade">Quantidade</label>
-                        <input type="number" id="material-quantidade" min="0" step="0.01">
+                        <input type="number" id="material-quantidade" min="0" step="0.01" value="10">
                     </div>
 
                     <input list="lista-material-unidade" id="material-unidade" name="material-unidade"
                         class="form-control unid1" placeholder="Digite ou selecione">
                     <datalist id="lista-material-unidade">
+                        <!-- Massa -->
                         <option value="Quilograma (kg)">
                         <option value="Grama (g)">
+                        <option value="Tonelada (t)">
+                        <option value="Miligrama (mg)">
+
+                            <!-- Volume -->
                         <option value="Litro (l)">
                         <option value="Mililitro (ml)">
-                        <option value="Unidade (un)">
+                        <option value="Metro Cúbico (m³)">
+                        <option value="Centímetro Cúbico (cm³)">
+
+                            <!-- Comprimento -->
                         <option value="Metro (m)">
                         <option value="Centímetro (cm)">
+                        <option value="Milímetro (mm)">
+                        <option value="Polegada (in)">
+                        <option value="Pé (ft)">
+
+                            <!-- Área -->
                         <option value="Metro Quadrado (m²)">
+                        <option value="Centímetro Quadrado (cm²)">
+
+                            <!-- Tempo -->
                         <option value="Hora (h)">
                         <option value="Minuto (min)">
+                        <option value="Segundo (s)">
+
+                            <!-- Unidade -->
+                        <option value="Unidade (un)">
                         <option value="Pacote (pc)">
+                        <option value="Caixa (cx)">
+                        <option value="Dúzia (dz)">
+                        <option value="Par (par)">
                     </datalist>
+
 
                     <button class="btn botaocentro" onclick="salvarMaterial()">Salvar Material</button>
 
@@ -1158,17 +1206,40 @@
                     <input list="lista-edit-material-unidade" id="edit-material-unidade" name="edit-material-unidade"
                         class="form-control  unid1" placeholder="Digite ou selecione">
                     <datalist id="lista-edit-material-unidade">
+                        <!-- Massa -->
                         <option value="Quilograma (kg)">
                         <option value="Grama (g)">
+                        <option value="Tonelada (t)">
+                        <option value="Miligrama (mg)">
+
+                            <!-- Volume -->
                         <option value="Litro (l)">
                         <option value="Mililitro (ml)">
-                        <option value="Unidade (un)">
+                        <option value="Metro Cúbico (m³)">
+                        <option value="Centímetro Cúbico (cm³)">
+
+                            <!-- Comprimento -->
                         <option value="Metro (m)">
                         <option value="Centímetro (cm)">
+                        <option value="Milímetro (mm)">
+                        <option value="Polegada (in)">
+                        <option value="Pé (ft)">
+
+                            <!-- Área -->
                         <option value="Metro Quadrado (m²)">
+                        <option value="Centímetro Quadrado (cm²)">
+
+                            <!-- Tempo -->
                         <option value="Hora (h)">
                         <option value="Minuto (min)">
+                        <option value="Segundo (s)">
+
+                            <!-- Unidade -->
+                        <option value="Unidade (un)">
                         <option value="Pacote (pc)">
+                        <option value="Caixa (cx)">
+                        <option value="Dúzia (dz)">
+                        <option value="Par (par)">
                     </datalist>
 
                     <div class="form-actions">
@@ -1237,17 +1308,40 @@
                             <input list="lista-edit-item-unidade" id="edit-item-unidade" name="edit-item-unidade"
                                 class="form-control  unid1" placeholder="Digite ou selecione">
                             <datalist id="lista-edit-item-unidade">
+                                <!-- Massa -->
                                 <option value="Quilograma (kg)">
                                 <option value="Grama (g)">
+                                <option value="Tonelada (t)">
+                                <option value="Miligrama (mg)">
+
+                                    <!-- Volume -->
                                 <option value="Litro (l)">
                                 <option value="Mililitro (ml)">
-                                <option value="Unidade (un)">
+                                <option value="Metro Cúbico (m³)">
+                                <option value="Centímetro Cúbico (cm³)">
+
+                                    <!-- Comprimento -->
                                 <option value="Metro (m)">
                                 <option value="Centímetro (cm)">
+                                <option value="Milímetro (mm)">
+                                <option value="Polegada (in)">
+                                <option value="Pé (ft)">
+
+                                    <!-- Área -->
                                 <option value="Metro Quadrado (m²)">
+                                <option value="Centímetro Quadrado (cm²)">
+
+                                    <!-- Tempo -->
                                 <option value="Hora (h)">
                                 <option value="Minuto (min)">
+                                <option value="Segundo (s)">
+
+                                    <!-- Unidade -->
+                                <option value="Unidade (un)">
                                 <option value="Pacote (pc)">
+                                <option value="Caixa (cx)">
+                                <option value="Dúzia (dz)">
+                                <option value="Par (par)">
                             </datalist>
 
                             <div class="form-group">
@@ -1352,10 +1446,10 @@
     </div>
 
     <div id="notificacao" class="notificacao-oculta" onclick="fecharNotificacao()">
-    <div class="notificacao-barra" onclick="event.stopPropagation()">
-        <span id="notificacao-texto"></span>
+        <div class="notificacao-barra" onclick="event.stopPropagation()">
+            <span id="notificacao-texto"></span>
+        </div>
     </div>
-</div>
 
 
 
@@ -2079,11 +2173,11 @@ Data: ${orcamento.data}
             }
         }
 
-function imprimirOrcamento() {
-    const conteudo = document.getElementById('conteudo-detalhes-orcamento').innerHTML;
-    const janelaImpressao = window.open('', '_blank');
+        function imprimirOrcamento() {
+            const conteudo = document.getElementById('conteudo-detalhes-orcamento').innerHTML;
+            const janelaImpressao = window.open('', '_blank');
 
-    janelaImpressao.document.write(`
+            janelaImpressao.document.write(`
         <!DOCTYPE html>
         <html>
         <head>
@@ -2117,9 +2211,9 @@ function imprimirOrcamento() {
         </html>
     `);
 
-    janelaImpressao.document.close();
-    janelaImpressao.print();
-}
+            janelaImpressao.document.close();
+            janelaImpressao.print();
+        }
 
 
         // Fechar modal ao clicar fora
@@ -2744,29 +2838,29 @@ function imprimirOrcamento() {
 
         let notificacaoTimeout = null;
 
-function mostrarNotificacao(mensagem, duracao = 3000) {
-    const container = document.getElementById('notificacao');
-    const texto = document.getElementById('notificacao-texto');
+        function mostrarNotificacao(mensagem, duracao = 3000) {
+            const container = document.getElementById('notificacao');
+            const texto = document.getElementById('notificacao-texto');
 
-    texto.textContent = mensagem;
-    container.style.display = 'flex';
+            texto.textContent = mensagem;
+            container.style.display = 'flex';
 
-    // Limpa qualquer timeout anterior
-    if (notificacaoTimeout) {
-        clearTimeout(notificacaoTimeout);
-    }
+            // Limpa qualquer timeout anterior
+            if (notificacaoTimeout) {
+                clearTimeout(notificacaoTimeout);
+            }
 
-    // Fecha automaticamente após o tempo definido
-    notificacaoTimeout = setTimeout(() => {
-        fecharNotificacao();
-    }, duracao);
-}
+            // Fecha automaticamente após o tempo definido
+            notificacaoTimeout = setTimeout(() => {
+                fecharNotificacao();
+            }, duracao);
+        }
 
-function fecharNotificacao() {
-    const container = document.getElementById('notificacao');
-    container.style.display = 'none';
-    notificacaoTimeout = null;
-}
+        function fecharNotificacao() {
+            const container = document.getElementById('notificacao');
+            container.style.display = 'none';
+            notificacaoTimeout = null;
+        }
 
 
 
