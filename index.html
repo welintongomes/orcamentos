@@ -635,6 +635,71 @@
             display: block;
         }
 
+        /* css para importar e exportar */
+        .import-export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .import-section {
+            margin-bottom: 20px;
+        }
+
+        .import-section label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .import-section input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .import-options {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .import-options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* css botão ocultar divs */
+        .oculto {
+            display: none;
+        }
+
+        .visivel {
+            display: block;
+        }
+
+
 
         @keyframes fadeIn {
             from {
@@ -660,7 +725,7 @@
 
 
 
-        @media (max-width: 768px) {
+        @media (max-width: 576px) {
             .modal-content {
                 padding: 20px;
                 width: 95%;
@@ -726,6 +791,12 @@
                 gap: 10px;
                 flex-direction: column;
             }
+
+            .botaocentro {
+                display: block;
+                margin: 0 auto;
+            }
+
         }
     </style>
 </head>
@@ -799,7 +870,7 @@
                                 <option value="pc">Pacote (pc)</option>
                             </select>
                         </div>
-                        <button class="btn" onclick="adicionarItem()">Adicionar Item</button>
+                        <button class="btn botaocentro" onclick="adicionarItem()">Adicionar Item</button>
                     </div>
                 </div>
 
@@ -830,13 +901,18 @@
                                 oninput="buscarOrcamentos()" class="search-input">
                             <span class="clear-icon" onclick="limparCampoBusca(this)">×</span>
                         </div>
-
+                        <!-- Adicionar após o campo de busca de orçamentos -->
                     </div>
                     <div id="lista-orcamentos">
                         <div class="empty-state">
                             <div style="font-size: 3em; margin-bottom: 20px;">📊</div>
                             <p>Nenhum orçamento salvo ainda</p>
                         </div>
+                    </div>
+                    <div class="import-export-buttons">
+                        <button class="btn" onclick="exportarOrcamentos()">Exportar Orçamentos</button>
+                        <button class="btn" onclick="abrirModal('modal-importar-orcamentos')">Importar
+                            Orçamentos</button>
                     </div>
                 </div>
             </div>
@@ -871,7 +947,7 @@
                             <option value="min">Minuto (min)</option>
                         </select>
                     </div>
-                    <button class="btn" onclick="salvarMaterial()">Salvar Material</button>
+                    <button class="btn botaocentro" onclick="salvarMaterial()">Salvar Material</button>
                 </div>
 
                 <div class="item-list">
@@ -890,6 +966,11 @@
                             <div style="font-size: 3em; margin-bottom: 20px;">📦</div>
                             <p>Nenhum material cadastrado ainda</p>
                         </div>
+                    </div>
+                    <!-- Adicionar após o campo de busca de materiais -->
+                    <div class="import-export-buttons">
+                        <button class="btn" onclick="exportarMateriais()">Exportar Materiais</button>
+                        <button class="btn" onclick="abrirModal('modal-importar-materiais')">Importar Materiais</button>
                     </div>
                 </div>
             </div>
@@ -1051,6 +1132,51 @@
                 </div>
             </div>
         </div>
+        <!-- Adicionar antes do fechamento do body -->
+        <div id="modal-importar-orcamentos" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="fecharModal('modal-importar-orcamentos')">&times;</span>
+                <h2>Importar Orçamentos</h2>
+                <div class="import-section">
+                    <label for="arquivo-orcamentos">Selecione o arquivo JSON:</label>
+                    <input type="file" id="arquivo-orcamentos" accept=".json" onchange="lerArquivoOrcamentos(event)">
+                </div>
+                <div class="import-options">
+                    <label>
+                        <input type="checkbox" id="substituir-orcamentos" checked>
+                        Substituir orçamentos existentes (se desmarcado, irá adicionar aos existentes)
+                    </label>
+                </div>
+                <div class="modal-buttons">
+                    <button class="btn" onclick="confirmarImportacaoOrcamentos()">Importar</button>
+                    <button class="btn btn-secondary"
+                        onclick="fecharModal('modal-importar-orcamentos')">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Adicionar antes do fechamento do body -->
+        <div id="modal-importar-materiais" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="fecharModal('modal-importar-materiais')">&times;</span>
+                <h2>Importar Materiais</h2>
+                <div class="import-section">
+                    <label for="arquivo-materiais">Selecione o arquivo JSON:</label>
+                    <input type="file" id="arquivo-materiais" accept=".json" onchange="lerArquivoMateriais(event)">
+                </div>
+                <div class="import-options">
+                    <label>
+                        <input type="checkbox" id="substituir-materiais" checked>
+                        Substituir materiais existentes (se desmarcado, irá adicionar aos existentes)
+                    </label>
+                </div>
+                <div class="modal-buttons">
+                    <button class="btn" onclick="confirmarImportacaoMateriais()">Importar</button>
+                    <button class="btn btn-secondary"
+                        onclick="fecharModal('modal-importar-materiais')">Cancelar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1063,6 +1189,9 @@
         // Variável para controlar o orçamento sendo editado
         let orcamentoEditando = null;
         let db;
+        //variaveis para importar e exportar
+        let dadosImportacaoOrcamentos = null;
+        let dadosImportacaoMateriais = null;
 
         // Função para normalizar texto (remover acentos e converter para minúsculas)
         function normalizarTexto(texto) {
@@ -1555,6 +1684,7 @@
         }
 
         // Função para fechar modal
+        // MODIFICAR a função fecharModal existente
         function fecharModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
             document.body.style.overflow = 'auto';
@@ -1563,6 +1693,17 @@
             if (modalId === 'modal-editar-orcamento') {
                 orcamentoEditando = null;
                 document.getElementById('edit-dropdown-materiais').classList.remove('show');
+            }
+
+            // ADICIONAR estas linhas para limpar dados de importação
+            if (modalId === 'modal-importar-orcamentos') {
+                dadosImportacaoOrcamentos = null;
+                document.getElementById('arquivo-orcamentos').value = '';
+            }
+
+            if (modalId === 'modal-importar-materiais') {
+                dadosImportacaoMateriais = null;
+                document.getElementById('arquivo-materiais').value = '';
             }
         }
 
@@ -2078,7 +2219,240 @@ Data: ${orcamento.data}
             input.dispatchEvent(new Event('input')); // reexecuta a busca
         }
 
+        //funçao genérica ocultar uma div
+        // function toggleVisibilidade(idElemento) {
+        //     const elemento = document.getElementById(idElemento);
+        //     elemento.classList.toggle('oculto');
+        //     elemento.classList.toggle('visivel');
+        // }
 
+        // Função para exportar orçamentos
+        function exportarOrcamentos() {
+            if (orcamentos.length === 0) {
+                alert('Não há orçamentos para exportar');
+                return;
+            }
+
+            const dadosExportacao = {
+                tipo: 'orcamentos',
+                versao: '1.0',
+                dataExportacao: new Date().toISOString(),
+                quantidade: orcamentos.length,
+                dados: orcamentos
+            };
+
+            const arquivo = new Blob([JSON.stringify(dadosExportacao, null, 2)], {
+                type: 'application/json'
+            });
+
+            const url = URL.createObjectURL(arquivo);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `orcamentos_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            alert(`${orcamentos.length} orçamentos exportados com sucesso!`);
+        }
+
+        // Função para exportar materiais
+        function exportarMateriais() {
+            if (materiais.length === 0) {
+                alert('Não há materiais para exportar');
+                return;
+            }
+
+            const dadosExportacao = {
+                tipo: 'materiais',
+                versao: '1.0',
+                dataExportacao: new Date().toISOString(),
+                quantidade: materiais.length,
+                dados: materiais
+            };
+
+            const arquivo = new Blob([JSON.stringify(dadosExportacao, null, 2)], {
+                type: 'application/json'
+            });
+
+            const url = URL.createObjectURL(arquivo);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `materiais_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            alert(`${materiais.length} materiais exportados com sucesso!`);
+        }
+
+        // Função para ler arquivo de orçamentos
+        function lerArquivoOrcamentos(event) {
+            const arquivo = event.target.files[0];
+            if (!arquivo) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const dados = JSON.parse(e.target.result);
+
+                    // Validar estrutura do arquivo
+                    if (!dados.tipo || dados.tipo !== 'orcamentos') {
+                        throw new Error('Arquivo não é um backup de orçamentos válido');
+                    }
+
+                    if (!dados.dados || !Array.isArray(dados.dados)) {
+                        throw new Error('Formato de arquivo inválido');
+                    }
+
+                    dadosImportacaoOrcamentos = dados.dados;
+                    alert(`Arquivo carregado com sucesso! Encontrados ${dados.dados.length} orçamentos.`);
+
+                } catch (error) {
+                    alert('Erro ao ler arquivo: ' + error.message);
+                    dadosImportacaoOrcamentos = null;
+                }
+            };
+
+            reader.readAsText(arquivo);
+        }
+
+        // Função para ler arquivo de materiais
+        function lerArquivoMateriais(event) {
+            const arquivo = event.target.files[0];
+            if (!arquivo) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const dados = JSON.parse(e.target.result);
+
+                    // Validar estrutura do arquivo
+                    if (!dados.tipo || dados.tipo !== 'materiais') {
+                        throw new Error('Arquivo não é um backup de materiais válido');
+                    }
+
+                    if (!dados.dados || !Array.isArray(dados.dados)) {
+                        throw new Error('Formato de arquivo inválido');
+                    }
+
+                    dadosImportacaoMateriais = dados.dados;
+                    alert(`Arquivo carregado com sucesso! Encontrados ${dados.dados.length} materiais.`);
+
+                } catch (error) {
+                    alert('Erro ao ler arquivo: ' + error.message);
+                    dadosImportacaoMateriais = null;
+                }
+            };
+
+            reader.readAsText(arquivo);
+        }
+
+        // Função para confirmar importação de orçamentos
+        function confirmarImportacaoOrcamentos() {
+            if (!dadosImportacaoOrcamentos) {
+                alert('Por favor, selecione um arquivo primeiro');
+                return;
+            }
+
+            const substituir = document.getElementById('substituir-orcamentos').checked;
+
+            if (substituir && orcamentos.length > 0) {
+                if (!confirm('Isto irá substituir todos os orçamentos existentes. Continuar?')) {
+                    return;
+                }
+            }
+
+            const transaction = db.transaction(['orcamentos'], 'readwrite');
+            const store = transaction.objectStore('orcamentos');
+
+            // Se escolheu substituir, limpar dados existentes
+            if (substituir) {
+                store.clear();
+            }
+
+            let importadosComSucesso = 0;
+            let totalParaImportar = dadosImportacaoOrcamentos.length;
+
+            dadosImportacaoOrcamentos.forEach(orcamento => {
+                // Remover ID para evitar conflitos
+                const { id, ...orcamentoSemId } = orcamento;
+
+                const request = store.add(orcamentoSemId);
+
+                request.onsuccess = function () {
+                    importadosComSucesso++;
+
+                    if (importadosComSucesso === totalParaImportar) {
+                        alert(`Importação concluída! ${importadosComSucesso} orçamentos importados.`);
+                        fecharModal('modal-importar-orcamentos');
+                        carregarOrcamentos();
+
+                        // Limpar dados temporários
+                        dadosImportacaoOrcamentos = null;
+                        document.getElementById('arquivo-orcamentos').value = '';
+                    }
+                };
+
+                request.onerror = function () {
+                    console.error('Erro ao importar orçamento:', orcamento.nome);
+                };
+            });
+        }
+
+        // Função para confirmar importação de materiais
+        function confirmarImportacaoMateriais() {
+            if (!dadosImportacaoMateriais) {
+                alert('Por favor, selecione um arquivo primeiro');
+                return;
+            }
+
+            const substituir = document.getElementById('substituir-materiais').checked;
+
+            if (substituir && materiais.length > 0) {
+                if (!confirm('Isto irá substituir todos os materiais existentes. Continuar?')) {
+                    return;
+                }
+            }
+
+            const transaction = db.transaction(['materiais'], 'readwrite');
+            const store = transaction.objectStore('materiais');
+
+            // Se escolheu substituir, limpar dados existentes
+            if (substituir) {
+                store.clear();
+            }
+
+            let importadosComSucesso = 0;
+            let totalParaImportar = dadosImportacaoMateriais.length;
+
+            dadosImportacaoMateriais.forEach(material => {
+                // Remover ID para evitar conflitos
+                const { id, ...materialSemId } = material;
+
+                const request = store.add(materialSemId);
+
+                request.onsuccess = function () {
+                    importadosComSucesso++;
+
+                    if (importadosComSucesso === totalParaImportar) {
+                        alert(`Importação concluída! ${importadosComSucesso} materiais importados.`);
+                        fecharModal('modal-importar-materiais');
+                        carregarMateriais();
+
+                        // Limpar dados temporários
+                        dadosImportacaoMateriais = null;
+                        document.getElementById('arquivo-materiais').value = '';
+                    }
+                };
+
+                request.onerror = function () {
+                    console.error('Erro ao importar material:', material.nome);
+                };
+            });
+        }
 
         // Eventos
         document.getElementById('margem-lucro').addEventListener('input', calcularTotal);
