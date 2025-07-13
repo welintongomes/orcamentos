@@ -699,6 +699,30 @@
             display: block;
         }
 
+        #material-unidade {
+            height: auto;
+        }
+
+        /* Limita visualmente a altura da lista */
+        input::-webkit-calendar-picker-indicator {
+            display: none;
+        }
+
+        datalist option {
+            max-height: 30px;
+        }
+
+        /* .unid{
+            height: 12px;
+        } */
+        .unid1 {
+            width: 100%;
+            margin-bottom: 11px;
+            height: 39px;
+            padding: 8px;
+        }
+
+        /* Isso pode não funcionar em todos os navegadores: o comportamento de datalist é limitado */
 
 
         @keyframes fadeIn {
@@ -854,23 +878,26 @@
                             <label for="item-quantidade">Quantidade</label>
                             <input type="number" id="item-quantidade" placeholder="0.5" step="0.01">
                         </div>
-                        <div class="form-group">
+                        <div>
                             <label for="item-unidade">Unidade</label>
-                            <select id="item-unidade">
-                                <option value="kg">Quilograma (kg)</option>
-                                <option value="g">Grama (g)</option>
-                                <option value="l">Litro (l)</option>
-                                <option value="ml">Mililitro (ml)</option>
-                                <option value="un">Unidade (un)</option>
-                                <option value="m">Metro (m)</option>
-                                <option value="cm">Centímetro (cm)</option>
-                                <option value="m²">Metro Quadrado (m²)</option>
-                                <option value="h">Hora (h)</option>
-                                <option value="min">Minuto (min)</option>
-                                <option value="pc">Pacote (pc)</option>
-                            </select>
+                            <input list="lista-item-unidade" id="item-unidade" name="item-unidade"
+                                class="form-control unid1" placeholder="Digite ou selecione">
+                            <datalist id="lista-item-unidade">
+                                <option value="Quilograma (kg)">
+                                <option value="Grama (g)">
+                                <option value="Litro (l)">
+                                <option value="Mililitro (ml)">
+                                <option value="Unidade (un)">
+                                <option value="Metro (m)">
+                                <option value="Centímetro (cm)">
+                                <option value="Metro Quadrado (m²)">
+                                <option value="Hora (h)">
+                                <option value="Minuto (min)">
+                                <option value="Pacote (pc)">
+                            </datalist>
+                            <button class="btn botaocentro" onclick="adicionarItem()">Adicionar Item</button>
                         </div>
-                        <button class="btn botaocentro" onclick="adicionarItem()">Adicionar Item</button>
+
                     </div>
                 </div>
 
@@ -932,22 +959,24 @@
                         <label for="material-preco">Preço Unitário (R$)</label>
                         <input type="number" id="material-preco" placeholder="3.50" step="0.01">
                     </div>
-                    <div class="form-group">
-                        <label for="material-unidade">Unidade</label>
-                        <select id="material-unidade">
-                            <option value="kg">Quilograma (kg)</option>
-                            <option value="g">Grama (g)</option>
-                            <option value="l">Litro (l)</option>
-                            <option value="ml">Mililitro (ml)</option>
-                            <option value="un">Unidade (un)</option>
-                            <option value="m">Metro (m)</option>
-                            <option value="cm">Centímetro (cm)</option>
-                            <option value="m²">Metro Quadrado (m²)</option>
-                            <option value="h">Hora (h)</option>
-                            <option value="min">Minuto (min)</option>
-                        </select>
-                    </div>
+
+                    <input list="lista-material-unidade" id="material-unidade" name="material-unidade"
+                        class="form-control unid1" placeholder="Digite ou selecione">
+                    <datalist id="lista-material-unidade">
+                        <option value="Quilograma (kg)">
+                        <option value="Grama (g)">
+                        <option value="Litro (l)">
+                        <option value="Mililitro (ml)">
+                        <option value="Unidade (un)">
+                        <option value="Metro (m)">
+                        <option value="Centímetro (cm)">
+                        <option value="Metro Quadrado (m²)">
+                        <option value="Hora (h)">
+                        <option value="Minuto (min)">
+                    </datalist>
+
                     <button class="btn botaocentro" onclick="salvarMaterial()">Salvar Material</button>
+
                 </div>
 
                 <div class="item-list">
@@ -989,19 +1018,19 @@
                         <label>Preço:</label>
                         <input type="number" id="edit-material-preco" step="0.01" required>
                     </div>
-                    <div class="form-group">
-                        <label>Unidade:</label>
-                        <select id="edit-material-unidade">
-                            <option value="un">Unidade</option>
-                            <option value="kg">Quilograma</option>
-                            <option value="m">Metro</option>
-                            <option value="m²">Metro²</option>
-                            <option value="m³">Metro³</option>
-                            <option value="l">Litro</option>
-                            <option value="cx">Caixa</option>
-                            <option value="pct">Pacote</option>
-                        </select>
-                    </div>
+                    <input list="lista-edit-material-unidade" id="edit-material-unidade" name="edit-material-unidade"
+                        class="form-control  unid1" placeholder="Digite ou selecione">
+                    <datalist id="lista-edit-material-unidade">
+                        <option value="Unidade">
+                        <option value="Quilograma">
+                        <option value="Metro">
+                        <option value="Metro²">
+                        <option value="Metro³">
+                        <option value="Litro">
+                        <option value="Caixa">
+                        <option value="Pacote">
+                    </datalist>
+
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary"
                             onclick="fecharModal('modal-editar-material')">Cancelar</button>
@@ -1065,19 +1094,19 @@
                                 <label>Quantidade:</label>
                                 <input type="number" id="edit-item-quantidade" step="0.01" min="0">
                             </div>
-                            <div class="form-group">
-                                <label>Unidade:</label>
-                                <select id="edit-item-unidade">
-                                    <option value="un">Unidade</option>
-                                    <option value="kg">Quilograma</option>
-                                    <option value="m">Metro</option>
-                                    <option value="m²">Metro²</option>
-                                    <option value="m³">Metro³</option>
-                                    <option value="l">Litro</option>
-                                    <option value="cx">Caixa</option>
-                                    <option value="pct">Pacote</option>
-                                </select>
-                            </div>
+                            <input list="lista-edit-item-unidade" id="edit-item-unidade" name="edit-item-unidade"
+                                class="form-control  unid1" placeholder="Digite ou selecione">
+                            <datalist id="lista-edit-item-unidade">
+                                <option value="Unidade">
+                                <option value="Quilograma">
+                                <option value="Metro">
+                                <option value="Metro²">
+                                <option value="Metro³">
+                                <option value="Litro">
+                                <option value="Caixa">
+                                <option value="Pacote">
+                            </datalist>
+
                             <div class="form-group">
                                 <label>&nbsp;</label>
                                 <button type="button" class="btn btn-primary"
