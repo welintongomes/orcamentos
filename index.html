@@ -128,6 +128,19 @@
             margin-right: 10px;
             margin-bottom: 10px;
         }
+        .btn {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+    padding: 6px 45px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    /* margin-right: 10px; */
+    margin-bottom: 6px;
+}
 
         .btn:hover {
             transform: translateY(-2px);
@@ -149,17 +162,17 @@
             margin-bottom: 20px;
         }
 
-        .item {
-            gap: 10px;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
+.item {
+    gap: 10px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
         .item-info {
             width: 96.9%;
@@ -1856,10 +1869,18 @@
             // Verifica se está fazendo busca ou não
             const estaBuscando = document.getElementById('busca-orcamentos')?.value.trim().length > 0;
 
-            // Define a lista a ser mostrada
-            const orcamentosParaMostrar = estaBuscando
-                ? orcamentosFiltrados
-                : orcamentosFiltrados.slice(0, LIMITE_INICIAL);
+            const orcamentosOrdenados = (estaBuscando ? orcamentosFiltrados : orcamentosFiltrados.slice())
+                .sort((a, b) => {
+                    // 1. Não finalizados primeiro
+                    if (a.finalizado !== b.finalizado) {
+                        return a.finalizado ? 1 : -1;
+                    }
+                    // 2. Mais recentes primeiro
+                    return b.id - a.id;
+                });
+
+            const orcamentosParaMostrar = orcamentosOrdenados.slice(0, LIMITE_INICIAL);
+
 
             // Renderiza os orçamentos na tela
             listaOrcamentos.innerHTML = orcamentosParaMostrar.map(orcamento => `
@@ -2304,9 +2325,10 @@ Data: ${orcamento.data}
 
             // Se não há busca (campo vazio), renderiza só os primeiros N
             const estaBuscando = document.getElementById('busca-materiais')?.value.trim().length > 0;
-            const materiaisParaMostrar = estaBuscando
+            const materiaisParaMostrar = (estaBuscando
                 ? materiaisFiltrados
-                : materiaisFiltrados.slice(0, LIMITE_INICIAL);
+                : materiaisFiltrados.slice(0, LIMITE_INICIAL)).sort((a, b) => b.id - a.id);
+
 
             listaMateriais.innerHTML = materiaisParaMostrar.map(material => {
                 const qtdStatus = getClasseQuantidade(material.quantidade);
