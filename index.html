@@ -2327,10 +2327,9 @@ Data: ${orcamento.data}
 
             // Se não há busca (campo vazio), renderiza só os primeiros N
             const estaBuscando = document.getElementById('busca-materiais')?.value.trim().length > 0;
-            const materiaisParaMostrar = (estaBuscando
+            const materiaisParaMostrar = estaBuscando
                 ? materiaisFiltrados
-                : materiaisFiltrados.slice(0, LIMITE_INICIAL)
-            ).slice().reverse();
+                : materiaisFiltrados.slice(0, LIMITE_INICIAL);
 
 
 
