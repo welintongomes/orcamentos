@@ -875,6 +875,41 @@
             }
         }
 
+        /* css para melhorar a visualizaçao no modal ediçao de orçamentos */
+        .form-row-horizontal {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .form-row-horizontal .form-group {
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .form-row-horizontal .grow {
+            flex: 2;
+            /* Nome ocupa mais espaço */
+        }
+
+        .unidade-group {
+            min-width: 140px;
+        }
+
+        .autocomplete-container {
+            position: relative;
+        }
+
+        @media (max-width: 600px) {
+            .form-row-horizontal {
+                flex-direction: column;
+            }
+
+            .form-row-horizontal .form-group {
+                width: 100%;
+            }
+        }
 
 
 
@@ -1297,74 +1332,84 @@
                     <!-- Adicionar novo item -->
                     <div class="add-item-section">
                         <h4>Adicionar Item</h4>
-                        <div class="form-row">
-                            <div class="form-group">
+                        <div class="form-row-horizontal">
+                            <!-- Nome do item -->
+                            <div class="form-group grow">
                                 <label>Nome:</label>
-                                <div class="autocomplete-container" style="position: relative;">
+                                <div class="autocomplete-container">
                                     <div class="search-container">
                                         <input type="text" id="edit-item-nome" placeholder="Digite o nome do item"
-                                            class="search-input" autocomplete="off"
-                                            oninput="buscarAutocompleteEdicao()">
+                                            class="search-input" autocomplete="off" oninput="">
                                         <span class="clear-icon" onclick="limparCampoBusca(this)">×</span>
                                     </div>
                                     <div id="edit-dropdown-materiais" class="dropdown-suggestions"></div>
                                 </div>
                             </div>
 
+                            <!-- Preço -->
                             <div class="form-group">
                                 <label>Preço:</label>
                                 <input type="number" id="edit-item-preco" step="0.01" min="0">
                             </div>
+
+                            <!-- Quantidade -->
                             <div class="form-group">
                                 <label>Quantidade:</label>
                                 <input type="number" id="edit-item-quantidade" step="0.01" min="0">
                             </div>
-                            <input list="lista-edit-item-unidade" id="edit-item-unidade" name="edit-item-unidade"
-                                class="form-control  unid1" placeholder="Digite ou selecione">
-                            <datalist id="lista-edit-item-unidade">
-                                <!-- Massa -->
-                                <option value="Quilograma (kg)">
-                                <option value="Grama (g)">
-                                <option value="Tonelada (t)">
-                                <option value="Miligrama (mg)">
 
-                                    <!-- Volume -->
-                                <option value="Litro (l)">
-                                <option value="Mililitro (ml)">
-                                <option value="Metro Cúbico (m³)">
-                                <option value="Centímetro Cúbico (cm³)">
+                            <!-- Unidade -->
+                            <div class="form-group unidade-group">
+                                <label>Unidade:</label>
+                                <input list="lista-edit-item-unidade" id="edit-item-unidade" name="edit-item-unidade"
+                                    class="form-control" placeholder="Digite ou selecione">
+                                <datalist id="lista-edit-item-unidade">
+                                    <!-- Massa -->
+                                    <option value="Quilograma (kg)">
+                                    <option value="Grama (g)">
+                                    <option value="Tonelada (t)">
+                                    <option value="Miligrama (mg)">
 
-                                    <!-- Comprimento -->
-                                <option value="Metro (m)">
-                                <option value="Centímetro (cm)">
-                                <option value="Milímetro (mm)">
-                                <option value="Polegada (in)">
-                                <option value="Pé (ft)">
+                                        <!-- Volume -->
+                                    <option value="Litro (l)">
+                                    <option value="Mililitro (ml)">
+                                    <option value="Metro Cúbico (m³)">
+                                    <option value="Centímetro Cúbico (cm³)">
 
-                                    <!-- Área -->
-                                <option value="Metro Quadrado (m²)">
-                                <option value="Centímetro Quadrado (cm²)">
+                                        <!-- Comprimento -->
+                                    <option value="Metro (m)">
+                                    <option value="Centímetro (cm)">
+                                    <option value="Milímetro (mm)">
+                                    <option value="Polegada (in)">
+                                    <option value="Pé (ft)">
 
-                                    <!-- Tempo -->
-                                <option value="Hora (h)">
-                                <option value="Minuto (min)">
-                                <option value="Segundo (s)">
+                                        <!-- Área -->
+                                    <option value="Metro Quadrado (m²)">
+                                    <option value="Centímetro Quadrado (cm²)">
 
-                                    <!-- Unidade -->
-                                <option value="Unidade (un)">
-                                <option value="Pacote (pc)">
-                                <option value="Caixa (cx)">
-                                <option value="Dúzia (dz)">
-                                <option value="Par (par)">
-                            </datalist>
+                                        <!-- Tempo -->
+                                    <option value="Hora (h)">
+                                    <option value="Minuto (min)">
+                                    <option value="Segundo (s)">
 
-                            <div class="form-group">
-                                <label>&nbsp;</label>
-                                <button type="button" class="btn btn-primary"
-                                    onclick="adicionarItemEdicao()">Adicionar</button>
+                                        <!-- Unidade -->
+                                    <option value="Unidade (un)">
+                                    <option value="Pacote (pc)">
+                                    <option value="Caixa (cx)">
+                                    <option value="Dúzia (dz)">
+                                    <option value="Par (par)">
+                                        <!-- opções como já estão -->
+                                </datalist>
                             </div>
                         </div>
+
+                        <!-- Botão abaixo -->
+                        <div class="form-group" style="margin-top: 10px;">
+                            <button type="button" class="btn btn-primary"
+                                onclick="adicionarItemEdicao()">Adicionar</button>
+                        </div>
                     </div>
+
 
                     <!-- Lista de itens -->
                     <div class="items-list-section">
@@ -2155,36 +2200,32 @@
         function compartilharOrcamento() {
             const modalId = document.getElementById('modal-detalhes-orcamento').dataset.orcamentoId;
             const orcamento = orcamentos.find(o => o.id == modalId);
-
             if (!orcamento) return;
 
-            const texto = `
-ORÇAMENTO: ${orcamento.nome}
+            let texto = `*🧾 ORÇAMENTO: ${orcamento.nome}*\n\n`;
+            texto += `*📝 Descrição:* ${orcamento.descricao || 'Sem descrição'}\n\n`;
+            texto += `*📦 Itens:*\n`;
 
-DESCRIÇÃO: ${orcamento.descricao || 'Sem descrição'}
+            orcamento.itens.forEach(item => {
+                texto += `• *Item:* ${item.nome}\n`;
+                texto += `• Quantidade: ${item.quantidade} ${item.unidade}\n`;
+                texto += `• Preço: R$ ${item.preco.toFixed(2)}\n`;
+                texto += `• Total: R$ ${item.total.toFixed(2)}\n\n`;
+            });
 
-ITENS:
-${orcamento.itens.map(item =>
-                `• ${item.nome}: ${item.quantidade} ${item.unidade} × R$ ${item.preco.toFixed(2)} = R$ ${item.total.toFixed(2)}`
-            ).join('\n')}
+            texto += `*💰 Total Final:* R$ ${orcamento.total.toFixed(2)}\n`;
+            texto += `*📅 Data:* ${orcamento.data} Válido por 10 Dias`;
 
-
-TOTAL FINAL: R$ ${orcamento.total.toFixed(2)}
-
-Data: ${orcamento.data}
-    `.trim();
-
+            // Compartilhamento ou cópia
             if (navigator.share) {
                 navigator.share({
                     title: `Orçamento: ${orcamento.nome}`,
                     text: texto
                 });
             } else {
-                // Fallback para copiar para clipboard
                 navigator.clipboard.writeText(texto).then(() => {
                     mostrarNotificacao('Orçamento copiado para a área de transferência!');
                 }).catch(() => {
-                    // Fallback manual
                     const textarea = document.createElement('textarea');
                     textarea.value = texto;
                     document.body.appendChild(textarea);
@@ -2195,6 +2236,7 @@ Data: ${orcamento.data}
                 });
             }
         }
+
 
         function imprimirOrcamento() {
             const conteudo = document.getElementById('conteudo-detalhes-orcamento').innerHTML;
@@ -2887,8 +2929,10 @@ Data: ${orcamento.data}
             notificacaoTimeout = null;
         }
 
-
-
+        // function buscarAutocompleteEdicao() {
+        //     // Ainda não implementado
+        //     console.log("Autocomplete de edição ainda não implementado");
+        // }
 
         // Eventos
         document.getElementById('margem-lucro').addEventListener('input', calcularTotal);
