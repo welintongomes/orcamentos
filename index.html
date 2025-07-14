@@ -1544,12 +1544,13 @@
             const request = store.getAll();
 
             request.onsuccess = function (event) {
-                materiais = event.target.result;
+                materiais = event.target.result.sort((a, b) => b.id - a.id); // 🟢 Ordenando do mais novo para o mais antigo
                 materiaisFiltrados = [...materiais];
                 renderizarMateriais();
                 configurarAutocomplete(); // Configurar autocomplete após carregar materiais
             };
         }
+
 
         // Controle de abas
         function showTab(tabName) {
